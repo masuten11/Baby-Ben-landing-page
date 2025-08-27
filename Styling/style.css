@@ -896,20 +896,15 @@ body {
   }
 }
 
-@media (width <=700px) {
+@media (width <=725px) {
   #answer-questions #questions-form {
     width: 80%;
   }
 }
 
-@media (width <=620px) {
+@media (width <=625px) {
   #answer-questions {
     padding-block: var(--spacing-2) calc(var(--spacing-2) * 1.3);
-  }
-}
-
-@media (width <=600px) {
-  #answer-questions {
     border-top-width: calc(var(--spacing-5) * .4);
     border-inline-width: calc(var(--spacing-5) * .37);
   }

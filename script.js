@@ -1,6 +1,6 @@
 // Firebase Configuration - Replace with your actual config
 const firebaseConfig = {
- apiKey: "AIzaSyDoI5Z1udti4op0ZteF5ZAEnG7CSmLojA0",
+  apiKey: "AIzaSyDoI5Z1udti4op0ZteF5ZAEnG7CSmLojA0",
   authDomain: "baby-ben-fan-page.firebaseapp.com",
   projectId: "baby-ben-fan-page",
   storageBucket: "baby-ben-fan-page.firebasestorage.app",
@@ -25,7 +25,7 @@ class FanPageFunctionality {
     this.questionsForm = document.getElementById('questions-form');
     this.currentLikes = 0;
     this.userHasLiked = false;
-    
+
     // Ben 10 character data for matching
     this.ben10Characters = {
       'Ben Tennyson': {
@@ -143,7 +143,7 @@ class FanPageFunctionality {
         likes: ['corruption', 'revenge']
       }
     };
-    
+
     this.init();
   }
 
@@ -159,7 +159,7 @@ class FanPageFunctionality {
     try {
       // Get current like count from Firebase
       const docSnap = await getDoc(likesDocRef);
-      
+
       if (docSnap.exists()) {
         this.currentLikes = docSnap.data().count || 0;
       } else {
@@ -170,9 +170,9 @@ class FanPageFunctionality {
 
       // Check if user has already liked (using localStorage for simplicity)
       this.userHasLiked = localStorage.getItem('hasLikedBabyBen') === 'true';
-      
+
       this.updateLikeButtonDisplay();
-      
+
     } catch (error) {
       console.error('Error setting up like system:', error);
       // Fallback to local display if Firebase fails
@@ -184,7 +184,7 @@ class FanPageFunctionality {
   // Updated updateLikeButtonDisplay to respect disabled state
   updateLikeButtonDisplay() {
     const heartIcon = this.likeButton.querySelector('img');
-    
+
     // Create or update like count span
     let likeCountSpan = this.likeButton.querySelector('.like-count');
     if (!likeCountSpan) {
@@ -192,7 +192,7 @@ class FanPageFunctionality {
       likeCountSpan.className = 'like-count';
       this.likeButton.appendChild(likeCountSpan);
     }
-    
+
     likeCountSpan.textContent = this.currentLikes;
   }
 
@@ -202,25 +202,25 @@ class FanPageFunctionality {
     this.likeButton.disabled = true;
     this.likeButton.style.opacity = '0.6';
     this.likeButton.style.cursor = 'not-allowed';
-    
+
     try {
-        // Like functionality
-        await updateDoc(likesDocRef, {
-          count: increment(1)
-        });
-        
-        this.currentLikes += 1;
-        this.userHasLiked = true;
-        localStorage.setItem('hasLikedBabyBen', 'true');
-        
-        this.updateLikeButtonDisplay();
-        this.showFeedback('Thanks for the love! ❤️');
-      
+      // Like functionality
+      await updateDoc(likesDocRef, {
+        count: increment(1)
+      });
+
+      this.currentLikes += 1;
+      this.userHasLiked = true;
+      localStorage.setItem('hasLikedBabyBen', 'true');
+
+      this.updateLikeButtonDisplay();
+      this.showFeedback('Thanks for the love! ❤️');
+
     } catch (error) {
       console.error('Error with like operation:', error);
       const action = this.userHasLiked ? 'remove' : 'add';
       this.showFeedback(`Failed to ${action} like. Try again!`, 'error');
-      
+
     } finally {
       // Re-enable button after operation completes
       this.likeButton.disabled = false;
@@ -235,11 +235,11 @@ class FanPageFunctionality {
     this.shareButton.disabled = true;
     this.shareButton.style.opacity = '0.6';
     this.shareButton.style.cursor = 'not-allowed';
-    
+
     try {
       // Get current page URL
       const currentUrl = window.location.href;
-      
+
       // Copy to clipboard using modern API
       if (navigator.clipboard && navigator.clipboard.writeText) {
         await navigator.clipboard.writeText(currentUrl);
@@ -249,11 +249,11 @@ class FanPageFunctionality {
         this.fallbackCopyToClipboard(currentUrl);
         this.showFeedback('Link copied to clipboard! 📋');
       }
-      
+
     } catch (error) {
       console.error('Error copying to clipboard:', error);
       this.showFeedback('Failed to copy link. Please copy manually.', 'error');
-      
+
     } finally {
       // Re-enable button after operation completes
       setTimeout(() => {
@@ -274,20 +274,20 @@ class FanPageFunctionality {
     document.body.appendChild(textArea);
     textArea.focus();
     textArea.select();
-    
+
     try {
       document.execCommand('copy');
     } catch (err) {
       console.error('Fallback copy failed:', err);
     }
-    
+
     document.body.removeChild(textArea);
   }
 
   // Setup form validation and submission
   setupFormValidation() {
     if (!this.questionsForm) return;
-    
+
     // Initialize EmailJS
     if (typeof emailjs !== 'undefined') {
       emailjs.init("Qx9HJT-of4cevevj0");
@@ -297,53 +297,53 @@ class FanPageFunctionality {
   // Validate form data
   validateFormData(formData) {
     const errors = [];
-    
+
     // Check required fields
     if (!formData.get('age')) {
       errors.push('Please select your age group');
     }
-    
+
     if (!formData.get('gender')) {
       errors.push('Please select your gender');
     }
-    
+
     const siblings = formData.get('siblings');
     if (!siblings || siblings < 0) {
       errors.push('Please enter a valid number of siblings');
     }
-    
+
     if (!formData.get('fav-color')) {
       errors.push('Please select your favorite color');
     }
-    
+
     if (!formData.get('love-ben')) {
       errors.push('Please answer if you love Baby Ben');
     }
-    
+
     return errors;
   }
 
   // Determine Ben 10 character based on answers
   determineCharacter(answers) {
     const { age, gender, siblings, favColor, loveBen, favCharacter } = answers;
-    
+
     // Score each character based on compatibility
     const scores = {};
-    
+
     Object.keys(this.ben10Characters).forEach(character => {
       let score = 0;
       const charData = this.ben10Characters[character];
-      
+
       // Age group compatibility (high weight)
       if (charData.ageGroups.includes(age)) {
         score += 30;
       }
-      
+
       // Color preference compatibility
       if (charData.colors.includes(favColor)) {
         score += 20;
       }
-      
+
       // Special scoring based on answers
       if (loveBen === 'yes') {
         // People who love Baby Ben are more likely to be heroes
@@ -351,7 +351,7 @@ class FanPageFunctionality {
           score += 15;
         }
       }
-      
+
       // Family size influence
       const siblingCount = parseInt(siblings);
       if (siblingCount === 0) {
@@ -365,20 +365,20 @@ class FanPageFunctionality {
           score += 10;
         }
       }
-      
+
       // Gender influence (subtle)
       if (gender === 'female') {
         if (['Gwen Tennyson', 'Charmcaster', 'Julie Yamamoto', 'Kai Green', 'Sandra Tennyson'].includes(character)) {
           score += 5;
         }
       }
-      
+
       // Random factor to avoid same results
       score += Math.random() * 10;
-      
+
       scores[character] = score;
     });
-    
+
     // Check if favorite character exists and is valid
     let validFavCharacter = null;
     if (favCharacter && this.ben10Characters[favCharacter]) {
@@ -386,14 +386,14 @@ class FanPageFunctionality {
       // Boost favorite character score but don't guarantee it
       scores[favCharacter] += 25;
     }
-    
+
     // Get top 3 characters
     const sortedCharacters = Object.keys(scores).sort((a, b) => scores[b] - scores[a]);
     const topCharacters = sortedCharacters.slice(0, 3);
-    
+
     // Add randomness to final selection from top candidates
     const finalCharacter = topCharacters[Math.floor(Math.random() * Math.min(3, topCharacters.length))];
-    
+
     return {
       character: finalCharacter,
       hadFavorite: !!validFavCharacter,
@@ -404,27 +404,27 @@ class FanPageFunctionality {
   // Handle form submission with proper disable/enable
   async handleFormSubmit(event) {
     event.preventDefault();
-    
+
     // Get submit button and disable immediately
     const submitButton = this.questionsForm.querySelector('#questions-submit-btn');
     const originalText = submitButton.textContent;
-    
+
     submitButton.disabled = true;
     submitButton.textContent = 'Sending...';
     submitButton.style.opacity = '0.6';
     submitButton.style.cursor = 'not-allowed';
-    
+
     try {
       const formData = new FormData(this.questionsForm);
-      
+
       // Validate form data
       const errors = this.validateFormData(formData);
-      
+
       if (errors.length > 0) {
         this.showFeedback('Please complete all required fields: ' + errors.join(', '), 'error');
         return;
       }
-      
+
       // Extract form data
       const answers = {
         age: formData.get('age'),
@@ -434,29 +434,29 @@ class FanPageFunctionality {
         loveBen: formData.get('love-ben'),
         favCharacter: formData.get('fav-character') || ''
       };
-      
+
       // Send email via EmailJS
       await this.sendEmailViaEmailJS(answers);
-      
+
       // Determine character
       const result = this.determineCharacter(answers);
-      
+
       // Show result message
       let message = `I've received your answers and I believe that you're ${result.character}!`;
-      
+
       if (result.hadFavorite && !result.favoriteMatched) {
         message += ` (Though I know you've mentioned ${answers.favCharacter} as your favorite!)`;
       }
-      
+
       this.showCharacterResult(message, result.character);
-      
+
       // Reset form only on success
       this.questionsForm.reset();
       this.showFeedback('Form submitted successfully! 🏃‍♂️');
-      
+
     } catch (error) {
       console.error('Error submitting form:', error);
-      
+
       // Try to determine character even if email fails
       try {
         const formData = new FormData(this.questionsForm);
@@ -468,22 +468,22 @@ class FanPageFunctionality {
           loveBen: formData.get('love-ben'),
           favCharacter: formData.get('fav-character') || ''
         };
-        
+
         const result = this.determineCharacter(answers);
         let message = `I believe that you're ${result.character}!`;
-        
+
         if (result.hadFavorite && !result.favoriteMatched) {
           message += ` (Though I've noticed you mentioned ${answers.favCharacter} as your favorite!)`;
         }
-        
+
         this.showCharacterResult(message, result.character);
         this.showFeedback('Character determined, but email sending failed. Please try again later.', 'error');
-        
+
       } catch (fallbackError) {
         console.error('Fallback character determination failed:', fallbackError);
         this.showFeedback('There was an error processing your answers. Please try again.', 'error');
       }
-      
+
     } finally {
       // Always re-enable button
       submitButton.disabled = false;
@@ -499,7 +499,7 @@ class FanPageFunctionality {
       console.log('EmailJS not loaded, skipping email send');
       return;
     }
-    
+
     const templateParams = {
       age: answers.age,
       gender: answers.gender,
@@ -510,7 +510,7 @@ class FanPageFunctionality {
       from_name: 'Baby Ben Fan Page Visitor',
       timestamp: new Date().toLocaleString()
     };
-    
+
     await emailjs.send(
       'service_dywgx5m',
       'template_ka6kjko',
@@ -541,7 +541,7 @@ class FanPageFunctionality {
       `;
       document.body.appendChild(resultModal);
     }
-    
+
     resultModal.innerHTML = `
       <div style="
         background: var(--color-accent2);
@@ -573,7 +573,7 @@ class FanPageFunctionality {
         </button>
       </div>
     `;
-    
+
     // Show modal
     setTimeout(() => {
       resultModal.style.opacity = '1';
@@ -592,12 +592,12 @@ class FanPageFunctionality {
     let likeClickTimeout = null;
     this.likeButton.addEventListener('click', (e) => {
       e.preventDefault();
-      
+
       // Clear any existing timeout
       if (likeClickTimeout) {
         clearTimeout(likeClickTimeout);
       }
-      
+
       // Throttle clicks
       likeClickTimeout = setTimeout(() => {
         if (!this.likeButton.disabled) {
@@ -610,12 +610,12 @@ class FanPageFunctionality {
     let shareClickTimeout = null;
     this.shareButton.addEventListener('click', (e) => {
       e.preventDefault();
-      
+
       // Clear any existing timeout
       if (shareClickTimeout) {
         clearTimeout(shareClickTimeout);
       }
-      
+
       // Throttle clicks
       shareClickTimeout = setTimeout(() => {
         if (!this.shareButton.disabled) {
@@ -649,7 +649,7 @@ class FanPageFunctionality {
 
     // Set styling based on type
     const bgColor = type === 'error' ? 'var(--color-accent1)' : 'var(--color-dark1)';
-    
+
     feedback.style.cssText = `
       position: fixed;
       top: var(--spacing-1);
@@ -687,7 +687,7 @@ window.fanPageInstance = null;
 // Initialize functionality when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
   window.fanPageInstance = new FanPageFunctionality();
-  
+
   // Set up real-time listener after instance is created
   setTimeout(() => {
     if (window.fanPageInstance) {
@@ -702,7 +702,7 @@ function setupRealtimeListener() {
     if (doc.exists()) {
       const newCount = doc.data().count || 0;
       const fanPage = window.fanPageInstance;
-      
+
       // Update count if instance exists and count has changed
       if (fanPage && newCount !== fanPage.currentLikes) {
         fanPage.currentLikes = newCount;
