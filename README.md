@@ -14,7 +14,7 @@ https://baby-ben-fan-page.web.app/
 ![preview2](mobile-preview2.jpg)
 
  ## Find Me At:
-  [**Facedbook**](https://www.facebook.com/Masuten11?mibextid=ZbWKwL) | [**X**](https://x.com/Masuten11?t=3z_2MEW53Pk64oYunvgJmw&s=09) | **Mail**: m4suten11@gmail.com
+  [**Facebook**](https://www.facebook.com/Masuten11?mibextid=ZbWKwL) | [**X**](https://x.com/Masuten11?t=3z_2MEW53Pk64oYunvgJmw&s=09) | **Mail**: m4suten11@gmail.com
   
 ## Site Keywords:
 - Ben 10
