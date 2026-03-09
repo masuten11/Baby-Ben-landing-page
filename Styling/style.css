@@ -775,6 +775,11 @@ body {
   animation: FadeIn 1.37s ease-in forwards;
 }
 
+#answer-questions .questions-field legend {
+  text-align: center;
+  width: 100%;
+}
+
 /* required field indicators */
 #answer-questions .questions-field[data-required="true"] legend::after {
   content: " *";
